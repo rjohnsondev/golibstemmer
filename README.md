@@ -29,12 +29,14 @@ Usage
 
 Basic usage:
 
+    package main
+
     import "github.com/rjohnsondev/golibstemmer"
     import "fmt"
     import "os"
 
     func main() {
-        s, err := golibstemmer.NewStemmer("english")
+        s, err := stemmer.NewStemmer("english")
         if err != nil {
             fmt.Println("Error creating stemmer: "+err.Error())
             os.Exit(1)
@@ -45,10 +47,12 @@ Basic usage:
 
 To get a list of supported stemming algorithms:
 
-    list := golibstemmer.GetSupportedLanguages()
+    list := stemmer.GetSupportedLanguages()
 
 Testing
 -------
+
+You can execute the basic included tests with:
 
     go test
 
