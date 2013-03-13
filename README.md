@@ -37,6 +37,7 @@ Basic usage:
 
     func main() {
         s, err := stemmer.NewStemmer("english")
+        defer s.Close()
         if err != nil {
             fmt.Println("Error creating stemmer: "+err.Error())
             os.Exit(1)

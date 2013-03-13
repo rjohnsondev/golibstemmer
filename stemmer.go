@@ -1,6 +1,6 @@
 package stemmer
 
-import "runtime"
+//import "runtime"
 import "unsafe"
 import "strings"
 import "fmt"
@@ -88,7 +88,7 @@ type Stemmer struct {
 }
 
 // internal method for GCing the C allocated stemmer
-func (s Stemmer) free() {
+func (s Stemmer) Close() {
     C.sb_stemmer_delete(s.stemmer)
 }
 
@@ -105,7 +105,6 @@ func NewStemmer(language string) (*Stemmer, error) {
     stemmer := &Stemmer{
         stemmer: tmp,
     }
-    runtime.SetFinalizer(stemmer, (*Stemmer).free)
     return stemmer, nil
 }
 

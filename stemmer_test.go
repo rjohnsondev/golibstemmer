@@ -16,6 +16,7 @@ func TestInvalidLang(t *testing.T) {
 
 func TestUtf8(t *testing.T) {
     stemmer, _ := NewStemmer("english")
+    defer stemmer.Close()
     word := "♬"
     stemmed := stemmer.StemWord(word)
     if stemmed != word {
@@ -36,6 +37,7 @@ func TestCMemoryLeak(t *testing.T) {
         for _, word := range words {
             stemmer, _ := NewStemmer("english")
             _ = stemmer.StemWord(word)
+            stemmer.Close()
         }
         runtime.GC()
         runtime.ReadMemStats(stats)
@@ -46,6 +48,7 @@ func TestCMemoryLeak(t *testing.T) {
 
 func TestStem(t *testing.T) {
     stemmer, _ := NewStemmer("english")
+    defer stemmer.Close()
     word := stemmer.StemWord("happy")
     if word != "happi" {
         t.Errorf("\"happy\" stemmed to %s, not \"happi\" as expected")
