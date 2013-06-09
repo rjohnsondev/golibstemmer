@@ -4,6 +4,7 @@ package stemmer
 import "unsafe"
 import "strings"
 import "fmt"
+import "sync"
 
 /*
 #cgo LDFLAGS: -lstemmer
@@ -85,6 +86,7 @@ func GetSupportedLanguages() []string {
 
 type Stemmer struct {
     stemmer *[0]uint8
+    lock *sync.Mutex
 }
 
 // internal method for GCing the C allocated stemmer
@@ -104,18 +106,21 @@ func NewStemmer(language string) (*Stemmer, error) {
     }
     stemmer := &Stemmer{
         stemmer: tmp,
+        lock: new(sync.Mutex),
     }
     return stemmer, nil
 }
 
 func (s Stemmer) StemWord(str string) string {
-
     cstr := C.CString(str)
     defer C.free(unsafe.Pointer(cstr))
     sbs := C.str_to_sb_symbol(cstr)
     defer C.free(unsafe.Pointer(sbs))
 
+    s.lock.Lock()
     stemmed := C.sb_stemmer_stem(s.stemmer, sbs, C.int(len(str)))
+    s.lock.Unlock()
+
     char := C.sb_symbol_to_char(stemmed)
     val := C.GoString(char)
 
