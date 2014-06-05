@@ -85,7 +85,7 @@ func GetSupportedLanguages() []string {
 
 
 type Stemmer struct {
-    stemmer *[0]uint8
+    stemmer *C.struct_sb_stemmer
     lock *sync.Mutex
 }
 
